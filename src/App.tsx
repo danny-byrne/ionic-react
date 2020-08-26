@@ -60,9 +60,17 @@ const App: React.FC = () => {
       return;
     }
 
-    const bmi: number = +enteredWeight / (+enteredHeight * +enteredHeight);
+    const weightConversionFactor = measure === "ftlbs" ? 2.2 : 1;
+    const heightConversionFactor = measure === "ftlbs" ? 3.28 : 1;
+    const weight = +enteredWeight / weightConversionFactor;
+    const height = +enteredHeight / heightConversionFactor;
+    const bmi: number = weight / (+height * +height);
 
     setCalculatedBmi(bmi);
+  };
+
+  const setMeasureHandler = (selected: "mkg" | "ftlbs") => {
+    setMeasure(selected);
   };
 
   const clearError = () => {
@@ -98,14 +106,16 @@ const App: React.FC = () => {
               <IonCol>
                 <InputControl
                   selectedValue={measure}
-                  onSelectValue={setMeasure}
+                  onSelectValue={setMeasureHandler}
                 />
               </IonCol>
             </IonRow>
             <IonRow>
               <IonCol>
                 <IonItem>
-                  <IonLabel position="floating">Your Height</IonLabel>
+                  <IonLabel position="floating">
+                    Your Height ({measure === "mkg" ? "mkg" : "ftlbs"})
+                  </IonLabel>
                   <IonInput type="number" ref={heightInputRef}></IonInput>
                 </IonItem>
               </IonCol>
